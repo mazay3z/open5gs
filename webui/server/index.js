@@ -1,5 +1,8 @@
 process.env.DB_URI = process.env.DB_URI || 'mongodb://localhost/open5gs';
 
+// ДОБАВЛЕНО: Импорт CryptoService для проверки ключа шифрования
+const CryptoService = require('./utils/crypto');
+
 const _hostname = process.env.HOSTNAME || 'localhost';
 const port = process.env.PORT || 9999;
 
@@ -31,6 +34,18 @@ const Account = require('./models/account.js');
 
 co(function* () {
   yield app.prepare();
+
+  // ДОБАВЛЕНО: Проверка ключа шифрования при запуске сервера
+  const cryptoWarnings = CryptoService.checkEncryptionKey();
+  if (cryptoWarnings.length > 0) {
+    console.log('\n' + '='.repeat(60));
+    console.log('  ENCRYPTION SECURITY WARNINGS');
+    console.log('='.repeat(60));
+    cryptoWarnings.forEach(warning => {
+      console.log(`⚠️  ${warning}`);
+    });
+    console.log('='.repeat(60) + '\n');
+  }
 
   mongoose.Promise = global.Promise;
   if (dev) {
@@ -112,6 +127,12 @@ co(function* () {
   server.listen(port, _hostname, err => {
     if (err) throw err;
     console.log('> Ready on http://' + _hostname + ':' + port);
+
+    // ДОБАВЛЕНО: Повторное предупреждение после запуска сервера
+    if (cryptoWarnings.length > 0) {
+      console.log('\n📝 Reminder: Configure OPEN5GS_CRYPTO_KEY environment variable for production!');
+    }
+
   });
 })
 .catch(error => console.error(error.stack));
