@@ -776,6 +776,23 @@ class Edit extends Component {
           }
         }
       });
+    } else if (action === 'create') {
+      // Ensure security fields are enabled during creation
+      // First, make sure the security object exists in uiSchema
+      if (!state.uiSchema.security) {
+        state.uiSchema.security = {};
+      }
+      
+      // Then ensure each security field is enabled
+      state.uiSchema.security.k = {
+        "ui:disabled": false
+      };
+      state.uiSchema.security.op_value = {
+        "ui:disabled": false
+      };
+      state.uiSchema.security.amf = {
+        "ui:disabled": false
+      };
     } else if (width !== SMALL) {
       state.uiSchema = Object.assign(state.uiSchema, {
         "imsi": {
