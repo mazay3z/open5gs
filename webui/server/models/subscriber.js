@@ -210,27 +210,29 @@ Subscriber.post(['find', 'findOne', 'findOneAndUpdate'], function(docs) {
   const processDoc = (doc) => {
     if (doc && doc.security) {
       try {
-        // Сохраняем оригинальные зашифрованные значения для проверки
-        const originalSecurity = { ...doc.security };
+        // Проверяем, есть ли зашифрованные данные (наличие ':' в значениях)
+        const hasEncryptedData = (security) => {
+          return (security.k && security.k.includes(':')) || 
+                 (security.op && security.op.includes(':')) || 
+                 (security.opc && security.opc.includes(':'));
+        };
+        
+        // Проверяем, были ли данные зашифрованы до дешифрования
+        const wasEncrypted = hasEncryptedData(doc.security);
         
         // Дешифрование данных для внутреннего использования
         doc.security = cryptoService.decryptSecurityData(doc.security);
         
         // Для отображения в веб-интерфейсе маскируем ключи звездочками
         // Это предотвращает отображение реальных значений ключей в веб-интерфейсе
-        if (doc.security.k) {
-          // Проверяем, были ли ключи дешифрованы (если они все еще зашифрованы, значит это новый формат)
-          if (originalSecurity.k && originalSecurity.k.includes(':')) {
+        if (wasEncrypted) {
+          if (doc.security.k) {
             doc.security.k = '********************************'; // 32 звездочки для KI
           }
-        }
-        if (doc.security.op) {
-          if (originalSecurity.op && originalSecurity.op.includes(':')) {
+          if (doc.security.op) {
             doc.security.op = '********************************'; // 32 звездочки для OP
           }
-        }
-        if (doc.security.opc) {
-          if (originalSecurity.opc && originalSecurity.opc.includes(':')) {
+          if (doc.security.opc) {
             doc.security.opc = '********************************'; // 32 звездочки для OPC
           }
         }

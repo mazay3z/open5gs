@@ -763,6 +763,17 @@ class Edit extends Component {
       state.uiSchema = Object.assign(state.uiSchema, {
         "imsi": {
           "ui:disabled": true
+        },
+        "security": {
+          "k": {
+            "ui:disabled": true
+          },
+          "op_value": {
+            "ui:disabled": true
+          },
+          "amf": {
+            "ui:disabled": true
+          }
         }
       });
     } else if (width !== SMALL) {

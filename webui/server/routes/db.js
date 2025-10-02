@@ -28,7 +28,7 @@ const preprocessSubscriber = (req, res, next) => {
       }
       
       // Валидация формата ключей аутентификации перед шифрованием (только для незамаскированных ключей)
-      const { k, op, opc } = req.body.security;
+      const { k, op, opc } = req.body.security || {};
       
       if (k && !/^[A-Fa-f0-9\s]{32,}$/.test(k.replace(/\s/g, ''))) {
         return res.status(400).json({
@@ -48,14 +48,14 @@ const preprocessSubscriber = (req, res, next) => {
         });
       }
       
-      // Удаление пробелов из ключей перед шифрованием
-      if (req.body.security.k) {
+      // Удаление пробелов из ключей перед шифрованием (только для незамаскированных ключей)
+      if (req.body.security && req.body.security.k) {
         req.body.security.k = req.body.security.k.replace(/\s/g, '');
       }
-      if (req.body.security.op) {
+      if (req.body.security && req.body.security.op) {
         req.body.security.op = req.body.security.op.replace(/\s/g, '');
       }
-      if (req.body.security.opc) {
+      if (req.body.security && req.body.security.opc) {
         req.body.security.opc = req.body.security.opc.replace(/\s/g, '');
       }
       
@@ -88,7 +88,10 @@ restify.serve(router, Subscriber, {
     if (res.statusCode >= 200 && res.statusCode < 300) {
       console.log(`Successfully processed ${req.method} request for subscriber`);
     }
-    next();
+    // Проверяем, что next существует и является функцией перед вызовом
+    if (next && typeof next === 'function') {
+      next();
+    }
   }
 });
 
