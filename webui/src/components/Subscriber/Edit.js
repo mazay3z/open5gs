@@ -65,7 +65,7 @@ const schema = {
           "title": "USIM Type",
           "enum": [0, 1],
           "enumNames": ["OPc", "OP"],
-          "default": 0,
+          "default": 0
         },
         "op_value": {
           "type": "string",
@@ -75,7 +75,7 @@ const schema = {
           "messages": {
             "pattern": "Only hexadecimal digits are allowed"
           }
-        },
+        }
       }
     },
     "ambr": {
@@ -89,14 +89,14 @@ const schema = {
             "value": {
               "type": "number",
               "title": "UE-AMBR Downlink*",
-              "required": true,
+              "required": true
             },
             "unit": {
               "type": "number",
               "title": "Unit",
               "enum": [0, 1, 2, 3, 4],
               "enumNames": ["bps", "Kbps", "Mbps", "Gbps", "Tbps"],
-              "default": 3,
+              "default": 3
             }
           }
         },
@@ -107,14 +107,14 @@ const schema = {
             "value": {
               "type": "number",
               "title": "UE-AMBR Uplink*",
-              "required": true,
+              "required": true
             },
             "unit": {
               "type": "number",
               "title": "Unit",
               "enum": [0, 1, 2, 3, 4],
               "enumNames": ["bps", "Kbps", "Mbps", "Gbps", "Tbps"],
-              "default": 3,
+              "default": 3
             }
           }
         }
@@ -125,7 +125,7 @@ const schema = {
       "title": "Subscriber Status (TS 29.272 7.3.29)",
       "enum": [ 0, 1 ],
       "enumNames": ["SERVICE_GRANTED", "OPERATOR_DETERMINED_BARRING"],
-      "default": 0,
+      "default": 0
     },
     "operator_determined_barring": {
       "type": "number",
@@ -142,7 +142,7 @@ const schema = {
         "(7) Barring of all outgoing inter-zonal calls except those directed to the home PLMN country",
         "(8) Barring of all outgoing international calls except those directed to the home PLMN country and Barring of all outgoing inter-zonal calls"
       ],
-      "default": 0,
+      "default": 0
     },
     "slice": {
       "type": "array",
@@ -174,7 +174,7 @@ const schema = {
           },
           "default_indicator": {
             "type": "boolean",
-            "title": "Default S-NSSAI",
+            "title": "Default S-NSSAI"
           },
           "session": {
             "type": "array",
@@ -198,11 +198,11 @@ const schema = {
                   "title": "Type*",
                   "enum": [1, 2, 3],
                   "enumNames": ["IPv4", "IPv6", "IPv4v6"],
-                  "default": 3,
+                  "default": 3
                 },
                 "lbo_roaming_allowed": {
                   "type": "boolean",
-                  "title": "LBO Roaming Allowed",
+                  "title": "LBO Roaming Allowed"
                 },
                 "qos": {
                   "type": "object",
@@ -212,7 +212,7 @@ const schema = {
                       "type": "number",
                       "title": "5QI/QCI*",
                       "enum": [ 1, 2, 3, 4, 65, 66, 67, 75, 71, 72, 73, 74, 76, 5, 6, 7, 8, 9, 69, 70, 79, 80, 82, 83, 84, 85, 86 ],
-                      "default": 5,
+                      "default": 5
                     },
                     "arp" : {
                       "type": "object",
@@ -222,7 +222,7 @@ const schema = {
                           "type": "number",
                           "title": "ARP Priority Level (1-15)*",
                           "enum": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
-                          "default": 1,
+                          "default": 1
                         },
                         "pre_emption_capability": {
                           "type": "number",
@@ -237,7 +237,7 @@ const schema = {
                           "enum": [1, 2],
                           "enumNames": ["Disabled", "Enabled"],
                           "default": 1
-                        },
+                        }
                       }
                     }
                   }
@@ -254,14 +254,14 @@ const schema = {
                           "type": "number",
                           "title": "Session-AMBR Downlink*",
                           "default": 1,
-                          "required": true,
+                          "required": true
                         },
                         "unit": {
                           "type": "number",
                           "title": "Unit",
                           "enum": [0, 1, 2, 3, 4],
                           "enumNames": ["bps", "Kbps", "Mbps", "Gbps", "Tbps"],
-                          "default": 3,
+                          "default": 3
                         }
                       }
                     },
@@ -273,14 +273,14 @@ const schema = {
                           "type": "number",
                           "title": "Session-AMBR Uplink*",
                           "default": 1,
-                          "required": true,
+                          "required": true
                         },
                         "unit": {
                           "type": "number",
                           "title": "Unit",
                           "enum": [0, 1, 2, 3, 4],
                           "enumNames": ["bps", "Kbps", "Mbps", "Gbps", "Tbps"],
-                          "default": 3,
+                          "default": 3
                         }
                       }
                     }
@@ -299,7 +299,7 @@ const schema = {
                       "type": "string",
                       "title": "UE IPv6 Address",
                       "format" : "ipv6"
-                    },
+                    }
                   }
                 },
                 "smf": {
@@ -315,7 +315,7 @@ const schema = {
                       "type": "string",
                       "title": "SMF IPv6 Address",
                       "format" : "ipv6"
-                    },
+                    }
                   }
                 },
                 "pcc_rule": {
@@ -343,7 +343,7 @@ const schema = {
                               "title": "Flow Direction*",
                               "enum": [1, 2],
                               "enumNames": ["Downlink", "Uplink"],
-                              "default": 1,
+                              "default": 1
                             },
                             "description": {
                               "type": "string",
@@ -366,7 +366,7 @@ const schema = {
                             "type": "number",
                             "title": "5QI/QCI*",
                             "enum": [ 1, 2, 3, 4, 65, 66, 67, 75, 71, 72, 73, 74, 76, 5, 6, 7, 8, 9, 69, 70, 79, 80, 82, 83, 84, 85, 86 ],
-                            "default": 1,
+                            "default": 1
                           },
                           "arp" : {
                             "type": "object",
@@ -376,22 +376,22 @@ const schema = {
                                 "type": "number",
                                 "title": "ARP Priority Level (1-15)*",
                                 "enum": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
-                                "default": 2,
+                                "default": 2
                               },
                               "pre_emption_capability": {
                                 "type": "number",
                                 "title": "Capability*",
                                 "enum": [1, 2],
                                 "enumNames": ["Disabled", "Enabled"],
-                                "default": 2,
+                                "default": 2
                               },
                               "pre_emption_vulnerability": {
                                 "type": "number",
                                 "title": "Vulnerability*",
                                 "enum": [1, 2],
                                 "enumNames": ["Disabled", "Enabled"],
-                                "default": 2,
-                              },
+                                "default": 2
+                              }
                             }
                           },
                           "mbr": {
@@ -404,14 +404,14 @@ const schema = {
                                 "properties": {
                                   "value": {
                                     "type": "number",
-                                    "title": "MBR Downlink",
+                                    "title": "MBR Downlink"
                                   },
                                   "unit": {
                                     "type": "number",
                                     "title": "Unit",
                                     "enum": [0, 1, 2, 3, 4],
                                     "enumNames": ["bps", "Kbps", "Mbps", "Gbps", "Tbps"],
-                                    "default": 1,
+                                    "default": 1
                                   }
                                 }
                               },
@@ -421,14 +421,14 @@ const schema = {
                                 "properties": {
                                   "value": {
                                     "type": "number",
-                                    "title": "MBR Uplink",
+                                    "title": "MBR Uplink"
                                   },
                                   "unit": {
                                     "type": "number",
                                     "title": "Unit",
                                     "enum": [0, 1, 2, 3, 4],
                                     "enumNames": ["bps", "Kbps", "Mbps", "Gbps", "Tbps"],
-                                    "default": 1,
+                                    "default": 1
                                   }
                                 }
                               }
@@ -444,14 +444,14 @@ const schema = {
                                 "properties": {
                                   "value": {
                                     "type": "number",
-                                    "title": "GBR Downlink",
+                                    "title": "GBR Downlink"
                                   },
                                   "unit": {
                                     "type": "number",
                                     "title": "Unit",
                                     "enum": [0, 1, 2, 3, 4],
                                     "enumNames": ["bps", "Kbps", "Mbps", "Gbps", "Tbps"],
-                                    "default": 1,
+                                    "default": 1
                                   }
                                 }
                               },
@@ -461,21 +461,21 @@ const schema = {
                                 "properties": {
                                   "value": {
                                     "type": "number",
-                                    "title": "GBR Uplink",
+                                    "title": "GBR Uplink"
                                   },
                                   "unit": {
                                     "type": "number",
                                     "title": "Unit",
                                     "enum": [0, 1, 2, 3, 4],
                                     "enumNames": ["bps", "Kbps", "Mbps", "Gbps", "Tbps"],
-                                    "default": 1,
+                                    "default": 1
                                   }
                                 }
                               }
                             }
-                          },
-                        },
-                      },
+                          }
+                        }
+                      }
                     }
                   }
                 }
@@ -490,52 +490,52 @@ const schema = {
 
 const uiSchema = {
   "imsi" : {
-    classNames: "col-xs-12",
+    classNames: "col-xs-12"
   },
   "msisdn" : {
-    classNames: "col-xs-7",
+    classNames: "col-xs-7"
   },
   "security" : {
     classNames: "col-xs-12",
     "k" : {
-      classNames: "col-xs-7",
+      classNames: "col-xs-7"
     },
     "amf" : {
-      classNames: "col-xs-5",
+      classNames: "col-xs-5"
     },
     "op_type" : {
-      classNames: "col-xs-4",
+      classNames: "col-xs-4"
     },
     "op_value" : {
-      classNames: "col-xs-8",
-    },
+      classNames: "col-xs-8"
+    }
   },
   "ambr" : {
     classNames: "col-xs-12",
     "downlink": {
       classNames: "col-xs-6",
       "value": {
-        classNames: "col-xs-8",
+        classNames: "col-xs-8"
       },
       "unit": {
-        classNames: "col-xs-4",
-      },
+        classNames: "col-xs-4"
+      }
     },
     "uplink": {
       classNames: "col-xs-6",
       "value": {
-        classNames: "col-xs-8",
+        classNames: "col-xs-8"
       },
       "unit": {
-        classNames: "col-xs-4",
-      },
+        classNames: "col-xs-4"
+      }
     }
   },
   "subscriber_status" : {
-    classNames: "col-xs-7",
+    classNames: "col-xs-7"
   },
   "operator_determined_barring" : {
-    classNames: "col-xs-7",
+    classNames: "col-xs-7"
   },
   "slice": {
     classNames: "col-xs-12",
@@ -543,25 +543,25 @@ const uiSchema = {
       "sst": {
         classNames: "col-xs-3",
         "ui:widget": "radio",
-        "ui:options": { "inline": true },
+        "ui:options": { "inline": true }
       },
       "sd": {
-        classNames: "col-xs-6",
+        classNames: "col-xs-6"
       },
       "default_indicator": {
-        classNames: "col-xs-3",
+        classNames: "col-xs-3"
       },
       "session": {
         classNames: "col-xs-12",
         "items": {
           "name": {
-            classNames: "col-xs-8",
+            classNames: "col-xs-8"
           },
           "type": {
-            classNames: "col-xs-4",
+            classNames: "col-xs-4"
           },
           "lbo_roaming_allowed": {
-            classNames: "col-xs-12",
+            classNames: "col-xs-12"
           },
           "qos": {
             classNames: "col-xs-12",
@@ -586,7 +586,7 @@ const uiSchema = {
               },
               "unit": {
                 classNames: "col-xs-4"
-              },
+              }
             },
             "uplink": {
               "value": {
@@ -594,8 +594,8 @@ const uiSchema = {
               },
               "unit": {
                 classNames: "col-xs-4"
-              },
-            },
+              }
+            }
           },
           "ue" : {
             classNames: "col-xs-12",
@@ -604,7 +604,7 @@ const uiSchema = {
             },
             "ipv6" : {
               classNames: "col-xs-6"
-            },
+            }
           },
           "smf" : {
             classNames: "col-xs-12",
@@ -613,7 +613,7 @@ const uiSchema = {
             },
             "ipv6" : {
               classNames: "col-xs-6"
-            },
+            }
           },
           "pcc_rule": {
             classNames: "col-xs-12",
@@ -623,9 +623,9 @@ const uiSchema = {
                   "direction": {
                   },
                   "description": {
-                    "ui:help": "Hint: 5.4.2 Flow-Description in TS29.212",
-                  },
-                },
+                    "ui:help": "Hint: 5.4.2 Flow-Description in TS29.212"
+                  }
+                }
               },
               "qos": {
                 "index": {
@@ -648,7 +648,7 @@ const uiSchema = {
                     },
                     "unit": {
                       classNames: "col-xs-4"
-                    },
+                    }
                   },
                   "uplink": {
                     "value": {
@@ -656,7 +656,7 @@ const uiSchema = {
                     },
                     "unit": {
                       classNames: "col-xs-4"
-                    },
+                    }
                   }
                 },
                 "gbr": {
@@ -666,7 +666,7 @@ const uiSchema = {
                     },
                     "unit": {
                       classNames: "col-xs-4"
-                    },
+                    }
                   },
                   "uplink": {
                     "value": {
@@ -674,7 +674,7 @@ const uiSchema = {
                     },
                     "unit": {
                       classNames: "col-xs-4"
-                    },
+                    }
                   }
                 }
               }
@@ -769,6 +769,9 @@ class Edit extends Component {
             "ui:disabled": true
           },
           "op_value": {
+            "ui:disabled": true
+          },
+          "op_type": {
             "ui:disabled": true
           },
           "amf": {
