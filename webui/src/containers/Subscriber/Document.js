@@ -110,7 +110,8 @@ class Document extends Component {
 
       if (subscriber.data.security) {
         // Mask security keys for editing to prevent displaying plain text
-        if (this.props.action === 'update') {
+        // Also mask after creation to maintain consistency
+        if (this.props.action === 'update' || (this.props.action === 'create' && status.response)) {
           if (subscriber.data.security.k) {
             subscriber.data.security.k = '********************************';
           }
