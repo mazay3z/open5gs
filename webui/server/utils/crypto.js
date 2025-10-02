@@ -18,7 +18,7 @@ class CryptoService {
     
     try {
       const iv = crypto.randomBytes(16);
-      const cipher = crypto.createCipher(this.algorithm, this.keyBuffer);
+      const cipher = crypto.createCipherGcm(this.algorithm, this.keyBuffer, iv);
       cipher.setAAD(Buffer.from('open5gs-auth-data', 'utf8'));
       
       let encrypted = cipher.update(text, 'utf8', 'hex');
@@ -58,7 +58,7 @@ class CryptoService {
       const authTag = Buffer.from(parts[1], 'hex');
       const encrypted = parts[2];
       
-      const decipher = crypto.createDecipher(this.algorithm, this.keyBuffer);
+      const decipher = crypto.createDecipherGcm(this.algorithm, this.keyBuffer, iv);
       decipher.setAAD(Buffer.from('open5gs-auth-data', 'utf8'));
       decipher.setAuthTag(authTag);
       

@@ -54,12 +54,13 @@ co(function* () {
   const db = yield mongoose.connect(process.env.DB_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    serverSelectionTimeoutMS: 1000
+    serverSelectionTimeoutMS: 1000,
+    useCreateIndex: true  // Использовать createIndex вместо ensureIndex
     /* other options */
   })
 
   if (dev) {
-    Account.count((err, count) => {
+    Account.countDocuments((err, count) => {
       if (err) {
         console.error(err);
         throw err;

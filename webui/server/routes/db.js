@@ -74,7 +74,10 @@ restify.serve(router, Subscriber, {
     if (res.statusCode >= 200 && res.statusCode < 300) {
       console.log(`Successfully processed ${req.method} request for subscriber`);
     }
-    next();
+    // Проверяем, что next существует и является функцией перед вызовом
+    if (next && typeof next === 'function') {
+      next();
+    }
   }
 });
 
