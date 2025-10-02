@@ -793,6 +793,9 @@ class Edit extends Component {
       state.uiSchema.security.op_value = {
         "ui:disabled": false
       };
+      state.uiSchema.security.op_type = {
+        "ui:disabled": false
+      };
       state.uiSchema.security.amf = {
         "ui:disabled": false
       };

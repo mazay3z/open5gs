@@ -109,6 +109,19 @@ class Document extends Component {
       //})
 
       if (subscriber.data.security) {
+        // Mask security keys for editing to prevent displaying plain text
+        if (this.props.action === 'update') {
+          if (subscriber.data.security.k) {
+            subscriber.data.security.k = '********************************';
+          }
+          if (subscriber.data.security.opc) {
+            subscriber.data.security.opc = '********************************';
+          }
+          if (subscriber.data.security.op) {
+            subscriber.data.security.op = '********************************';
+          }
+        }
+        
         if (subscriber.data.security.opc) {
           subscriber.data.security.op_type = 0;
           subscriber.data.security.op_value = subscriber.data.security.opc;
