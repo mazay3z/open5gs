@@ -220,12 +220,13 @@ Subscriber.post(['find', 'findOne', 'findOneAndUpdate'], function(docs) {
         // Проверяем, были ли данные зашифрованы до дешифрования
         const wasEncrypted = hasEncryptedData(doc.security);
         
-        // Дешифрование данных для внутреннего использования
-        doc.security = cryptoService.decryptSecurityData(doc.security);
-        
-        // Для отображения в веб-интерфейсе маскируем ключи звездочками
-        // Это предотвращает отображение реальных значений ключей в веб-интерфейсе
+        // Только пытаемся дешифровать, если данные зашифрованы
         if (wasEncrypted) {
+          // Дешифрование данных для внутреннего использования
+          doc.security = cryptoService.decryptSecurityData(doc.security);
+          
+          // Для отображения в веб-интерфейсе маскируем ключи звездочками
+          // Это предотвращает отображение реальных значений ключей в веб-интерфейсе
           if (doc.security.k) {
             doc.security.k = '********************************'; // 32 звездочки для KI
           }
@@ -236,10 +237,12 @@ Subscriber.post(['find', 'findOne', 'findOneAndUpdate'], function(docs) {
             doc.security.opc = '********************************'; // 32 звездочки для OPC
           }
         }
+        // Если данные не зашифрованы, оставляем их как есть (новые записи или старые данные)
       } catch (error) {
         console.error('Authentication key decryption error for subscriber:', doc.imsi, error);
         // Не выбрасывать ошибку, чтобы не сломать приложение
         // В случае ошибки дешифрования, данные остаются зашифрованными
+        // Просто оставляем оригинальные данные как есть
       }
     }
   };

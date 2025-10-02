@@ -684,7 +684,7 @@ const uiSchema = {
       }
     }
   }
-}
+};
 
 class Edit extends Component {
   static propTypes = {
@@ -696,7 +696,7 @@ class Edit extends Component {
     onHide: PropTypes.func,
     onSubmit: PropTypes.func,
     onError: PropTypes.func
-  }
+  };
 
   constructor(props) {
     super(props);
@@ -726,11 +726,11 @@ class Edit extends Component {
       if (this.state.profile === undefined) {
         state = Object.assign(state, {
           profile : profiles[0]._id
-        })
+        });
       } else {
         state = Object.assign(state, {
           profile : this.state.profile
-        })
+        });
       }
 
       state = {
@@ -748,11 +748,11 @@ class Edit extends Component {
             ...schema.properties
           }
         }
-      }
+      };
 
       state = Object.assign(state, {
         formData : this.getFormDataFromProfile(state.profile)
-      })
+      });
 
       delete state.uiSchema.profile;
     } else {
@@ -822,7 +822,7 @@ class Edit extends Component {
 
     if (action === 'create' && Object.keys(profiles).length > 0) {
       if (this.state.profile !== formData.profile) {
-        let data = this.getFormDataFromProfile(formData.profile)
+        let data = this.getFormDataFromProfile(formData.profile);
         this.setState({
           profile: formData.profile,
           formData : data
@@ -833,7 +833,7 @@ class Edit extends Component {
     }
 
     return undefined;
-  }
+  };
 
   render() {
     const {
@@ -867,7 +867,7 @@ class Edit extends Component {
         onChange={handleChange}
         onSubmit={onSubmit}
         onError={onError}/>
-    )
+    );
   }
 }
 
