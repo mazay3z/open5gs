@@ -13,7 +13,21 @@ const Subscriber = require('../models/subscriber');
 const preprocessSubscriber = (req, res, next) => {
   if (req.body && req.body.security) {
     try {
-      // Валидация формата ключей аутентификации перед шифрованием
+      // Проверка, являются ли ключи замаскированными (звездочками)
+      const isMasked = (key) => key && key.startsWith('*') && key.length === 32;
+      
+      // Если ключи замаскированы, удаляем их из запроса, чтобы не перезаписывать существующие значения
+      if (isMasked(req.body.security.k)) {
+        delete req.body.security.k;
+      }
+      if (isMasked(req.body.security.op)) {
+        delete req.body.security.op;
+      }
+      if (isMasked(req.body.security.opc)) {
+        delete req.body.security.opc;
+      }
+      
+      // Валидация формата ключей аутентификации перед шифрованием (только для незамаскированных ключей)
       const { k, op, opc } = req.body.security;
       
       if (k && !/^[A-Fa-f0-9\s]{32,}$/.test(k.replace(/\s/g, ''))) {
@@ -74,10 +88,7 @@ restify.serve(router, Subscriber, {
     if (res.statusCode >= 200 && res.statusCode < 300) {
       console.log(`Successfully processed ${req.method} request for subscriber`);
     }
-    // Проверяем, что next существует и является функцией перед вызовом
-    if (next && typeof next === 'function') {
-      next();
-    }
+    next();
   }
 });
 
