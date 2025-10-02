@@ -167,17 +167,39 @@ const Pdn = styled.div`
   }
 `
 const View = ({ visible, disableOnClickOutside, subscriber, onEdit, onDelete, onHide }) => {
-  const imsi = (subscriber || {}).imsi;
-  const msisdn_list = ((subscriber || {}).msisdn || []);
-  const imeisv = (subscriber || {}).imeisv;
-  const mme_host = (subscriber || {}).mme_host;
-  const mme_realm = (subscriber || {}).mme_realm;
-  const purge_flag = (subscriber || {}).purge_flag;
-  const security = ((subscriber || {}).security || {});
-  const ambr = ((subscriber || {}).ambr || {});
-  const subscriber_status = (subscriber || {}).subscriber_status;
-  const operator_determined_barring = (subscriber || {}).operator_determined_barring;
-  const slice_list = ((subscriber || {}).slice || []);
+  // Create a copy of the subscriber data to avoid modifying the original
+  const displaySubscriber = subscriber ? JSON.parse(JSON.stringify(subscriber)) : null;
+  
+  // Mask security keys for display
+  if (displaySubscriber && displaySubscriber.security) {
+    // Check if keys are plain text (not already masked with 32 asterisks) and mask them
+    if (displaySubscriber.security.k && 
+        displaySubscriber.security.k !== '********************************') {
+      displaySubscriber.security.k = '********************************';
+    }
+    
+    if (displaySubscriber.security.opc && 
+        displaySubscriber.security.opc !== '********************************') {
+      displaySubscriber.security.opc = '********************************';
+    }
+    
+    if (displaySubscriber.security.op && 
+        displaySubscriber.security.op !== '********************************') {
+      displaySubscriber.security.op = '********************************';
+    }
+  }
+
+  const imsi = (displaySubscriber || {}).imsi;
+  const msisdn_list = ((displaySubscriber || {}).msisdn || []);
+  const imeisv = (displaySubscriber || {}).imeisv;
+  const mme_host = (displaySubscriber || {}).mme_host;
+  const mme_realm = (displaySubscriber || {}).mme_realm;
+  const purge_flag = (displaySubscriber || {}).purge_flag;
+  const security = ((displaySubscriber || {}).security || {});
+  const ambr = ((displaySubscriber || {}).ambr || {});
+  const subscriber_status = (displaySubscriber || {}).subscriber_status;
+  const operator_determined_barring = (displaySubscriber || {}).operator_determined_barring;
+  const slice_list = ((displaySubscriber || {}).slice || []);
 
   return (
     <div>
