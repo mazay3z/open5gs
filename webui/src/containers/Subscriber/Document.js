@@ -108,31 +108,38 @@ class Document extends Component {
       //  if (this.key == 'uplink') this.update(Number(x));
       //})
 
-      if (subscriber.data.security) {
+      // Create a copy of the subscriber data to avoid modifying the original
+      const processedData = JSON.parse(JSON.stringify(subscriber.data));
+
+      if (processedData.security) {
         // Mask security keys for editing to prevent displaying plain text
-        // Also mask after creation to maintain consistency
-        if (this.props.action === 'update' || (this.props.action === 'create' && status.response)) {
-          if (subscriber.data.security.k) {
-            subscriber.data.security.k = '********************************';
+        // For update action, always mask
+        // For create action, mask when we have the final data (not the initial form data)
+        if (action === 'update' || 
+            (action === 'create' && processedData.security.k && processedData.security.k.includes(':'))) {
+          // Check if the keys are encrypted (contain ':') and mask them
+          if (processedData.security.k && processedData.security.k.includes(':')) {
+            processedData.security.k = '********************************';
           }
-          if (subscriber.data.security.opc) {
-            subscriber.data.security.opc = '********************************';
+          if (processedData.security.opc && processedData.security.opc.includes(':')) {
+            processedData.security.opc = '********************************';
           }
-          if (subscriber.data.security.op) {
-            subscriber.data.security.op = '********************************';
+          if (processedData.security.op && processedData.security.op.includes(':')) {
+            processedData.security.op = '********************************';
           }
         }
         
-        if (subscriber.data.security.opc) {
-          subscriber.data.security.op_type = 0;
-          subscriber.data.security.op_value = subscriber.data.security.opc;
+        // Convert OPC/OP to op_value for form display
+        if (processedData.security.opc) {
+          processedData.security.op_type = 0;
+          processedData.security.op_value = processedData.security.opc;
         } else {
-          subscriber.data.security.op_type = 1;
-          subscriber.data.security.op_value = subscriber.data.security.op;
+          processedData.security.op_type = 1;
+          processedData.security.op_value = processedData.security.op;
         }
       }
 
-      this.setState({ formData: subscriber.data })
+      this.setState({ formData: processedData })
     } else {
       this.setState({ formData });
     }
