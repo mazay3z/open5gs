@@ -95,6 +95,7 @@ class Document extends Component {
       // Create a copy of the subscriber data to avoid modifying the original
       const processedData = JSON.parse(JSON.stringify(subscriber.data));
 
+<<<<<<< HEAD
       if (processedData.security) {
         // Always mask encrypted keys - check if keys contain ':' which indicates encryption
         // This handles both update and create scenarios
@@ -112,6 +113,12 @@ class Document extends Component {
         if (processedData.security.opc) {
           processedData.security.op_type = 0;
           processedData.security.op_value = processedData.security.opc;
+=======
+      if (subscriber.data.security) {
+        if (subscriber.data.security.opc) {
+          subscriber.data.security.op_type = 0;
+          subscriber.data.security.op_value = subscriber.data.security.opc;
+>>>>>>> parent of 46e7a2f94 (op_type = enable when create)
         } else {
           processedData.security.op_type = 1;
           processedData.security.op_value = processedData.security.op;
