@@ -18,7 +18,6 @@ const schema = {
       "maxLength": 15,
       "messages": {
         "pattern": "Only digits are allowed"
-        }
       }
     },
     "msisdn": {
@@ -61,17 +60,17 @@ const schema = {
             "pattern": "Only hexadecimal digits are allowed"
           }
         },
-        "op_type": {
-          "type": "number",
-          "title": "USIM Type",
-          "enum": [0, 1],
-          "enumNames": ["OPc", "OP"],
-          "default": 0
-        },
-        "op_value": {
+        "opc": {
           "type": "string",
-          "title": "Operator Key (OPc/OP)*",
-          "required": true,
+          "title": "Operator Key (OPc)*",
+          "pattern": "^[0-9a-fA-F\\s]+$",
+          "messages": {
+            "pattern": "Only hexadecimal digits are allowed"
+          }
+        },
+        "op": {
+          "type": "string",
+          "title": "Operator Key (OP)*",
           "pattern": "^[0-9a-fA-F\\s]+$",
           "messages": {
             "pattern": "Only hexadecimal digits are allowed"
@@ -487,6 +486,7 @@ const schema = {
       }
     }
   }
+};
 
 const uiSchema = {
   "imsi" : {
@@ -503,11 +503,11 @@ const uiSchema = {
     "amf" : {
       classNames: "col-xs-5"
     },
-    "op_type" : {
-      classNames: "col-xs-4"
+    "opc" : {
+      classNames: "col-xs-6"
     },
-    "op_value" : {
-      classNames: "col-xs-8"
+    "op" : {
+      classNames: "col-xs-6"
     }
   },
   "ambr" : {
@@ -768,10 +768,10 @@ class Edit extends Component {
           "k": {
             "ui:disabled": true
           },
-          "op_value": {
+          "opc": {
             "ui:disabled": true
           },
-          "op_type": {
+          "op": {
             "ui:disabled": true
           },
           "amf": {
@@ -790,15 +790,19 @@ class Edit extends Component {
       state.uiSchema.security.k = {
         "ui:disabled": false
       };
-      state.uiSchema.security.op_value = {
+      state.uiSchema.security.opc = {
         "ui:disabled": false
       };
-      state.uiSchema.security.op_type = {
+      state.uiSchema.security.op = {
         "ui:disabled": false
       };
       state.uiSchema.security.amf = {
         "ui:disabled": false
       };
+      
+      // Mark security fields as required for creation
+      state.schema.properties.security.properties.k.required = true;
+      state.schema.properties.security.properties.amf.required = true;
     } else if (width !== SMALL) {
       state.uiSchema = Object.assign(state.uiSchema, {
         "imsi": {
@@ -825,12 +829,18 @@ class Edit extends Component {
     //  if (this.key == 'uplink') this.update(Number(x));
     //})
     if (formData.security) {
-      if (formData.security.opc) {
-        formData.security.op_type = 0;
-        formData.security.op_value = formData.security.opc;
-      } else {
-        formData.security.op_type = 1;
-        formData.security.op_value = formData.security.op;
+      // Convert the combined op_value back to separate op/opc fields if needed
+      if (formData.security.op_value) {
+        if (formData.security.op_type === 0) {
+          // OPc type
+          formData.security.opc = formData.security.op_value;
+        } else {
+          // OP type
+          formData.security.op = formData.security.op_value;
+        }
+        // Remove the combined fields
+        delete formData.security.op_value;
+        delete formData.security.op_type;
       }
     }
 
