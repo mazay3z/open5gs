@@ -92,41 +92,20 @@ class Document extends Component {
     }
 
     if (subscriber.data) {
-      // Mongoose library has a problem for 64bit-long type
-      //
-      //   FETCH : the library returns 'Number' type for 64bit-long type
-      //   CREATE/UPDATE : the library returns 'String' type for 64bit-long type
-      //
-      // In this case, I cannot avoid json-schema validation function
-      // So, I've changed the type from 'String' to 'Number' if the key name is 'downlink' and 'uplink'
-      // 
-      //    The followings are changed from 'String' to 'Number' after DB CREATE or UPDATE
-      //     - ambr.downlink, ambr.uplink, qos.mbr.downlink, qos.mbr.uplink, qos.gbr.downlink, qos.gbr.uplink
-      // 
-      //traverse(subscriber.data).forEach(function(x) {
-      //  if (this.key == 'downlink') this.update(Number(x));
-      //  if (this.key == 'uplink') this.update(Number(x));
-      //})
-
       // Create a copy of the subscriber data to avoid modifying the original
       const processedData = JSON.parse(JSON.stringify(subscriber.data));
 
       if (processedData.security) {
-        // Mask security keys for editing to prevent displaying plain text
-        // For update action, always mask
-        // For create action, mask when we have the final data (not the initial form data)
-        if (action === 'update' || 
-            (action === 'create' && processedData.security.k && processedData.security.k.includes(':'))) {
-          // Check if the keys are encrypted (contain ':') and mask them
-          if (processedData.security.k && processedData.security.k.includes(':')) {
-            processedData.security.k = '********************************';
-          }
-          if (processedData.security.opc && processedData.security.opc.includes(':')) {
-            processedData.security.opc = '********************************';
-          }
-          if (processedData.security.op && processedData.security.op.includes(':')) {
-            processedData.security.op = '********************************';
-          }
+        // Always mask encrypted keys - check if keys contain ':' which indicates encryption
+        // This handles both update and create scenarios
+        if (processedData.security.k && processedData.security.k.includes(':')) {
+          processedData.security.k = '********************************';
+        }
+        if (processedData.security.opc && processedData.security.opc.includes(':')) {
+          processedData.security.opc = '********************************';
+        }
+        if (processedData.security.op && processedData.security.op.includes(':')) {
+          processedData.security.op = '********************************';
         }
         
         // Convert OPC/OP to op_value for form display
@@ -194,114 +173,6 @@ class Document extends Component {
     }
   }
 
-  validate = (formData, errors) => {
-    const { subscribers, action, status } = this.props;
-    const { imsi } = formData;
-
-    if (action === 'create' && subscribers && subscribers.data &&
-      subscribers.data.filter(subscriber => subscriber.imsi === imsi).length > 0) {
-      errors.imsi.addError(`'${imsi}' is duplicated`);
-    }
-
-//    In Editing-mode, this is not working!
-//    More study is needed.
-//
-//    if (formData.msisdn) {
-//      formData.msisdn.map(msisdn => {
-//        if (subscribers.data.filter(subscriber => subscriber.msisdn.includes(msisdn)).length > 0) {
-//          errors.msisdn.addError(`'${msisdn}' is duplicated`);
-//        }
-//      });
-
-    if (formData.msisdn) {
-      const { msisdn } = formData;
-      if (msisdn && msisdn.length > 1 && msisdn[0] === msisdn[1])
-        errors.msisdn.addError(`'${msisdn[1]}' is duplicated`);
-    }
-
-    if (formData.slice) {
-      let s_nssais = formData.slice.map(slice => {
-        return JSON.stringify({ sst: slice.sst, sd: slice.sd })
-      });
-      let duplicates = {};
-      for (let i = 0; i < s_nssais.length; i++) {
-        if (duplicates.hasOwnProperty(s_nssais[i])) {
-          duplicates[s_nssais[i]].push(i);
-        } else if (s_nssais.lastIndexOf(s_nssais[i]) !== i) {
-          duplicates[s_nssais[i]] = [i];
-        }
-      }
-      for (let key in duplicates) {
-        duplicates[key].forEach(index =>
-          errors.slice[index].sst.addError(`${key} is duplicated`));
-      }
-    }
-
-    for (let i = 0; i < formData.slice.length; i++) {
-      let names = formData.slice[i].session.map(session => {
-        return session.name
-      });
-      let duplicates = {};
-      for (let j = 0; j < names.length; j++) {
-        if (duplicates.hasOwnProperty(names[j])) {
-          duplicates[names[j]].push(j);
-        } else if (names.lastIndexOf(names[j]) !== j) {
-          duplicates[names[j]] = [j];
-        }
-      }
-      for (let key in duplicates) {
-        duplicates[key].forEach(index => 
-          errors.slice[i].session[index].name.addError(`'${key}' is duplicated`));
-      }
-    }
-
-    if (!formData.slice.some(slice => slice.default_indicator == true)) {
-      for (let i = 0; i < formData.slice.length; i++) {
-        errors.slice[i].default_indicator.addError(
-            `At least 1 Default S-NSSAI is required`);
-      }
-    }
-
-    return errors;
-  }
-
-  handleSubmit = (formData) => {
-    const { dispatch, action } = this.props;
-    if (formData.security) {
-      if (formData.security.op_type === 1) {
-        formData.security.op = formData.security.op_value;
-        formData.security.opc = null;
-      } else {
-        formData.security.op = null;
-        formData.security.opc = formData.security.op_value;
-      }
-    }
-
-    NProgress.configure({ 
-      parent: '#nprogress-base-form',
-      trickleSpeed: 5
-    });
-    NProgress.start();
-
-    if (action === 'create') {
-      dispatch(createSubscriber({}, formData));
-    } else if (action === 'update') {
-      dispatch(updateSubscriber(formData.imsi, {}, formData));
-    } else {
-      throw new Error(`Action type '${action}' is invalid.`);
-    }
-  }
-
-  handleError = errors => {
-    const { dispatch } = this.props;
-    errors.map(error =>
-      dispatch(Notification.error({
-        title: 'Validation Error',
-        message: error.stack
-      }))
-    )
-  }
-
   render() {
     const {
       validate,
@@ -318,11 +189,28 @@ class Document extends Component {
       onHide
     } = this.props
 
+    // Ensure masked data is passed to the Edit component
+    const maskedFormData = { ...this.state.formData };
+    
+    // Apply masking to formData before passing to Edit component
+    if (maskedFormData.security) {
+      // Always mask encrypted keys - check if keys contain ':' which indicates encryption
+      if (maskedFormData.security.k && maskedFormData.security.k.includes(':')) {
+        maskedFormData.security.k = '********************************';
+      }
+      if (maskedFormData.security.opc && maskedFormData.security.opc.includes(':')) {
+        maskedFormData.security.opc = '********************************';
+      }
+      if (maskedFormData.security.op && maskedFormData.security.op.includes(':')) {
+        maskedFormData.security.op = '********************************';
+      }
+    }
+
     return (
       <Subscriber.Edit
         visible={visible} 
         action={action}
-        formData={this.state.formData}
+        formData={maskedFormData}
         profiles={profiles.data}
         isLoading={subscriber.isLoading && !status.pending}
         validate={validate}

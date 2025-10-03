@@ -18,6 +18,7 @@ const schema = {
       "maxLength": 15,
       "messages": {
         "pattern": "Only digits are allowed"
+        }
       }
     },
     "msisdn": {
@@ -486,7 +487,6 @@ const schema = {
       }
     }
   }
-};
 
 const uiSchema = {
   "imsi" : {
