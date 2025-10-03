@@ -793,12 +793,9 @@ class Edit extends Component {
       state.uiSchema.security.opc = {
         "ui:disabled": false
       };
-<<<<<<< HEAD
       state.uiSchema.security.op = {
         "ui:disabled": false
       };
-=======
->>>>>>> parent of 46e7a2f94 (op_type = enable when create)
       state.uiSchema.security.amf = {
         "ui:disabled": false
       };
